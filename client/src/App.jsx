@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
+import * as storage from "./storage";
 
 function toLocalInputValue(iso) {
   if (!iso) return "";
@@ -37,13 +38,9 @@ export default function App() {
   const [editDraft, setEditDraft] = useState({ timeIn: "", timeOut: "", note: "" });
   const [now, setNow] = useState(Date.now());
 
-  const load = useCallback(async () => {
-    const [entriesRes, statusRes] = await Promise.all([
-      fetch("/api/entries").then((r) => r.json()),
-      fetch("/api/status").then((r) => r.json()),
-    ]);
-    setEntries(entriesRes);
-    setOpenEntry(statusRes.open);
+  const load = useCallback(() => {
+    setEntries(storage.getEntries());
+    setOpenEntry(storage.getStatus().open);
   }, []);
 
   useEffect(() => {
@@ -60,14 +57,9 @@ export default function App() {
     setError("");
     setLoading(true);
     try {
-      const res = await fetch("/api/time-in", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ note }),
-      });
-      if (!res.ok) throw new Error((await res.json()).error || "Failed to time in");
+      storage.timeIn(note);
       setNote("");
-      await load();
+      load();
     } catch (e) {
       setError(e.message);
     } finally {
@@ -79,14 +71,9 @@ export default function App() {
     setError("");
     setLoading(true);
     try {
-      const res = await fetch("/api/time-out", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ note }),
-      });
-      if (!res.ok) throw new Error((await res.json()).error || "Failed to time out");
+      storage.timeOut(note);
       setNote("");
-      await load();
+      load();
     } catch (e) {
       setError(e.message);
     } finally {
@@ -108,25 +95,27 @@ export default function App() {
   };
 
   const saveEdit = async (id) => {
-    const res = await fetch(`/api/entries/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
+    try {
+      storage.updateEntry(id, {
         timeIn: fromLocalInputValue(editDraft.timeIn),
         timeOut: fromLocalInputValue(editDraft.timeOut),
         note: editDraft.note,
-      }),
-    });
-    if (res.ok) {
+      });
       setEditingId(null);
-      await load();
+      load();
+    } catch (e) {
+      setError(e.message);
     }
   };
 
   const deleteEntry = async (id) => {
     if (!confirm("Delete this entry?")) return;
-    const res = await fetch(`/api/entries/${id}`, { method: "DELETE" });
-    if (res.ok) await load();
+    try {
+      storage.deleteEntry(id);
+      load();
+    } catch (e) {
+      setError(e.message);
+    }
   };
 
   const totalHours = entries.reduce((sum, e) => sum + (e.hours || 0), 0);
@@ -135,9 +124,9 @@ export default function App() {
     <div className="app">
       <header className="app-header">
         <h1>Work Tracker</h1>
-        <a className="export-btn" href="/api/export" download>
+        <button className="export-btn" onClick={storage.exportCSV}>
           Export CSV
-        </a>
+        </button>
       </header>
 
       <section className="status-card">
