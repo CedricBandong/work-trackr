@@ -1,0 +1,262 @@
+:root {
+  --text: #4b5563;
+  --text-h: #08060d;
+  --bg: #f7f7f8;
+  --card-bg: #ffffff;
+  --border: #e5e4e7;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --danger: #dc2626;
+  --danger-hover: #b91c1c;
+  --success-bg: #dcfce7;
+  --success-text: #166534;
+  --muted-bg: #f1f1f3;
+  --muted-text: #52525b;
+
+  font: 16px/145% system-ui, "Segoe UI", Roboto, sans-serif;
+  color-scheme: light dark;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #d1d5db;
+    --text-h: #f3f4f6;
+    --bg: #16171d;
+    --card-bg: #1f2028;
+    --border: #2e303a;
+    --accent: #60a5fa;
+    --accent-hover: #3b82f6;
+    --danger: #f87171;
+    --danger-hover: #ef4444;
+    --success-bg: rgba(22, 163, 74, 0.2);
+    --success-text: #4ade80;
+    --muted-bg: #2a2b33;
+    --muted-text: #9ca3af;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+#root {
+  max-width: 760px;
+  margin: 0 auto;
+  min-height: 100svh;
+  padding: 24px 16px 48px;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+h1 {
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--text-h);
+  margin: 0;
+}
+
+h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-h);
+  margin: 0;
+}
+
+.export-btn {
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  color: var(--text-h);
+  text-decoration: none;
+  background: var(--card-bg);
+}
+
+.export-btn:hover {
+  background: var(--muted-bg);
+}
+
+.status-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px 20px;
+  text-align: center;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.status-pill {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.status-in {
+  background: var(--success-bg);
+  color: var(--success-text);
+}
+
+.status-out {
+  background: var(--muted-bg);
+  color: var(--muted-text);
+}
+
+.elapsed {
+  font-size: 40px;
+  font-weight: 700;
+  color: var(--text-h);
+  font-variant-numeric: tabular-nums;
+}
+
+.since {
+  font-size: 13px;
+  color: var(--muted-text);
+}
+
+.note-input {
+  width: 100%;
+  max-width: 320px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+  font-size: 14px;
+}
+
+.btn {
+  padding: 12px 32px;
+  border-radius: 8px;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #fff;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-in {
+  background: var(--accent);
+}
+.btn-in:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.btn-out {
+  background: var(--danger);
+}
+.btn-out:hover:not(:disabled) {
+  background: var(--danger-hover);
+}
+
+.error {
+  color: var(--danger);
+  font-size: 13px;
+}
+
+.table-section {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.total {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 8px 6px;
+  border-bottom: 1px solid var(--border);
+}
+
+th {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted-text);
+}
+
+.note-cell {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  color: var(--accent);
+  cursor: pointer;
+  font-size: 13px;
+  padding: 0;
+}
+
+.link-btn.danger {
+  color: var(--danger);
+}
+
+.empty {
+  text-align: center;
+  color: var(--muted-text);
+  padding: 24px;
+}
+
+td input[type="text"],
+td input[type="datetime-local"] {
+  padding: 4px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+  font-size: 13px;
+  width: 100%;
+}
